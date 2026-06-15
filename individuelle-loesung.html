@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Individuelle Lösung – Genussautomaten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800;900&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+<style>
+  :root {
+    --orange: #F07D00;
+    --orange-light: #FF9A2E;
+    --card-bg: #F5F2ED;
+    --text-main: #1a1a1a;
+    --text-muted: #6b6560;
+    --input-bg: #EDE9E2;
+    --radius: 18px;
+    --shadow: 0 24px 64px rgba(0,0,0,0.35);
+  }
+
+  /* ── WIZARD SECTION LAYOUT ── */
+  .wizard-section {
+    background: #f8f5f0;
+    padding: 80px 0 80px;
+  }
+  .wizard-inner {
+    position: relative; z-index: 1;
+    max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 2rem;
+  }
+  .wizard-row {
+    display: flex; align-items: center; gap: 48px;
+  }
+  .vm-col {
+    flex-shrink: 0; display: flex; flex-direction: column;
+    align-items: center;
+  }
+  .wizard-info {
+    margin-top: 3rem; display: flex; gap: 40px;
+    align-items: flex-start; flex-wrap: wrap;
+  }
+  .wizard-info .left-copy { flex: 1; min-width: 200px; }
+
+  /* ── VENDING MACHINE ── */
+  .vm-wrap { display: flex; justify-content: center; }
+  .vm-outer {
+    position: relative; width: 200px;
+    filter: drop-shadow(0 0 32px rgba(240,125,0,0.5));
+  }
+  #vm-svg { width: 100%; display: block; }
+  @keyframes slot-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .vm-status-label {
+    text-align: center; font-size: 11px; font-weight: 600;
+    color: var(--orange); letter-spacing: 1.5px; text-transform: uppercase;
+    min-height: 18px; margin-top: 6px; transition: opacity 0.3s;
+  }
+
+  /* ── DARK WIZARD CARD ── */
+  .wizard-card {
+    background: #1a1209; border-radius: var(--radius);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+    flex: 1; min-width: 0; padding: 36px; color: #e0dbd4;
+  }
+
+  /* Progress */
+  .progress-wrap { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 14px 18px 12px; margin-bottom: 28px; }
+  .progress-label { font-size: 12px; font-weight: 700; color: #e0dbd4; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .progress-bar { height: 9px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--orange-light)); border-radius: 6px; transition: width 0.5s cubic-bezier(.22,1,.36,1); }
+
+  /* Steps */
+  .step { display: none; }
+  .step.active { display: block; }
+  .step-question { font-size: 15px; font-weight: 600; color: #e0dbd4; margin-bottom: 18px; line-height: 1.5; }
+
+  /* Options — dark card */
+  .option-list { display: flex; flex-direction: column; gap: 9px; }
+  .option-label {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 12px 15px; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 14px; font-weight: 500; color: #e0dbd4; user-select: none;
+  }
+  .option-label:hover { border-color: rgba(240,125,0,0.5); background: rgba(255,255,255,0.1); }
+  .option-label input { display: none; }
+  .option-label.checked { border-color: var(--orange); background: rgba(240,125,0,0.15); }
+
+  .custom-box {
+    width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 5px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s; background: rgba(255,255,255,0.05);
+  }
+  .option-label.checked .custom-box { background: var(--orange); border-color: var(--orange); }
+  .custom-box::after {
+    content: ''; width: 5px; height: 9px;
+    border: 2px solid #fff; border-top: none; border-left: none;
+    transform: rotate(45deg) translateY(-1px); opacity: 0; transition: opacity 0.15s;
+  }
+  .option-label.checked .custom-box::after { opacity: 1; }
+  .option-label.radio .custom-box { border-radius: 50%; }
+  .option-label.radio .custom-box::after { width: 8px; height: 8px; border: none; border-radius: 50%; background: #fff; transform: none; }
+
+  /* Errors */
+  .step-error { display: none; margin-top: 10px; color: #f87171; font-size: 13px; font-weight: 500; padding: 8px 12px; background: rgba(248,113,113,0.1); border-radius: 8px; border-left: 3px solid #f87171; }
+
+  /* Buttons */
+  .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+  .btn { padding: 12px 26px; border-radius: 12px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: transform 0.15s, opacity 0.15s; letter-spacing: 0.4px; }
+  .btn:hover { transform: translateY(-1px); opacity: 0.9; }
+  .btn:active { transform: translateY(0); }
+  .btn-back { background: rgba(255,255,255,0.1); color: #e0dbd4; }
+  .btn-next { background: var(--orange); color: #fff; margin-left: auto; }
+  .btn-send { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--orange), var(--orange-light)); color: #fff; border-radius: 12px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; margin-top: 16px; transition: opacity 0.2s, transform 0.15s; }
+  .btn-send:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* Contact form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-bottom: 8px; }
+  .form-field { display: flex; flex-direction: column; gap: 5px; }
+  .form-field label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-field label .req { color: var(--orange); margin-left: 2px; }
+  .form-field input { background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 11px 13px; font-size: 14px; font-family: inherit; color: #e0dbd4; outline: none; transition: border-color 0.2s; }
+  .form-field input:focus { border-color: var(--orange); }
+  .form-field input::placeholder { color: rgba(255,255,255,0.25); }
+  .form-field input.invalid { border-color: #f87171; }
+  .form-field .field-error { font-size: 11px; color: #f87171; display: none; }
+  .form-field input.invalid + .field-error { display: block; }
+
+  .hp-field { position: absolute; left: -9999px; opacity: 0; height: 0; }
+
+  /* Thank you */
+  .thankyou { display: none; text-align: center; padding: 20px 0; }
+  .ty-icon { width: 64px; height: 64px; background: linear-gradient(135deg, var(--orange), var(--orange-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 20px; animation: pop 0.5s cubic-bezier(.22,1,.36,1); }
+  @keyframes pop { from { transform: scale(0); opacity:0; } to { transform: scale(1); opacity:1; } }
+  .thankyou h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #e0dbd4; }
+  .thankyou p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7; }
+
+  /* Below wizard row */
+  .left-copy h2 { font-size: 14px; font-weight: 600; color: var(--orange); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+  .left-copy p { font-size: 14px; line-height: 1.75; color: #6b6560; margin-bottom: 8px; }
+  .left-copy p strong { color: #1a1a1a; font-weight: 600; }
+
+  .contact-chips { display: flex; flex-direction: column; gap: 8px; }
+  .chip { display: flex; align-items: center; gap: 12px; background: rgba(240,125,0,0.07); border: 1px solid rgba(240,125,0,0.18); border-radius: 12px; padding: 10px 14px; }
+  .chip-icon { width: 30px; height: 30px; background: rgba(240,125,0,0.13); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .chip-label { font-weight: 600; color: var(--orange); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .chip-value { color: #555; font-size: 12px; }
+
+  @media (max-width: 800px) {
+    .wizard-row { flex-direction: column; align-items: center; gap: 32px; }
+    .wizard-info { flex-direction: column; gap: 16px; }
+    .wizard-inner { padding: 2rem 1rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .vm-outer { width: 160px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="site-header scrolled" id="siteHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <img src="assets/images/logo-1.png" alt="Genussautomaten Logo" onerror="this.style.display='none'">
+      Genussautomaten
+    </a>
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="index.html">Startseite</a></li>
+        <li>
+          <a href="automatenloesungen.html">Automatenlösungen <span class="arrow">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="heissgetraenke.html">Heißgetränke-Automaten</a></li>
+            <li><a href="getraenke.html">Getränke-Automaten</a></li>
+            <li><a href="snack.html">Snack-Automaten</a></li>
+            <li><a href="genuss-station.html">Genuss-Station</a></li>
+          </ul>
+        </li>
+        <li><a href="service.html">Service</a></li>
+        <li>
+          <a href="ueber-uns.html">Über Uns <span class="arrow">▾</span></a>
+          <ul class="dropdown">
+            <li><a href="unternehmen.html">Unser Unternehmen</a></li>
+            <li><a href="versprechen.html">Unser Versprechen</a></li>
+            <li><a href="mission.html">Unsere Mission</a></li>
+          </ul>
+        </li>
+        <li><a href="kontakt.html" class="nav-cta">Kontakt</a></li>
+      </ul>
+    </nav>
+    <button class="mobile-toggle" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Startseite</a>
+    <a href="automatenloesungen.html">Automatenlösungen</a>
+    <a href="heissgetraenke.html" class="sub-link">Heißgetränke-Automaten</a>
+    <a href="getraenke.html" class="sub-link">Getränke-Automaten</a>
+    <a href="snack.html" class="sub-link">Snack-Automaten</a>
+    <a href="genuss-station.html" class="sub-link">Genuss-Station</a>
+    <a href="service.html">Service</a>
+    <a href="ueber-uns.html">Über Uns</a>
+    <a href="unternehmen.html" class="sub-link">Unser Unternehmen</a>
+    <a href="versprechen.html" class="sub-link">Unser Versprechen</a>
+    <a href="mission.html" class="sub-link">Unsere Mission</a>
+    <a href="kontakt.html" class="mobile-cta">Kontakt</a>
+  </div>
+</header>
+
+<section class="v2-konfigurator v2-konfigurator--light">
+  <div class="v2-konfigurator__inner">
+    <div class="v2-konfigurator__eyebrow">Maßgeschneidert für Sie</div>
+    <h2 class="v2-konfigurator__title">Ihre individuelle<br><em>Automatenlösung</em></h2>
+    <p class="v2-konfigurator__sub">Fordern Sie Ihren Automaten ganz nach den Bedürfnissen Ihres Betriebs an: Automaten, Sortiment und Service, alles aus einer Hand.</p>
+  </div>
+</section>
+
+<section class="wizard-section" style="background:#f5f2ed;">
+<div class="wizard-inner">
+
+<div class="wizard-row">
+
+<!-- Automat -->
+<div class="vm-col" aria-hidden="true">
+  <div class="vm-wrap">
+    <div class="vm-outer">
+      <svg id="vm-svg" viewBox="0 0 200 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- SHADOW -->
+        <ellipse cx="100" cy="412" rx="60" ry="7" fill="rgba(0,0,0,0.4)"/>
+        <!-- BODY -->
+        <rect x="16" y="10" width="168" height="390" rx="16" fill="#D96E00"/>
+        <rect x="20" y="14" width="160" height="382" rx="13" fill="#F07D00"/>
+        <!-- side sheen -->
+        <rect x="20" y="14" width="28" height="382" rx="13" fill="rgba(255,255,255,0.07)"/>
+
+        <!-- DISPLAY FRAME -->
+        <rect x="28" y="22" width="144" height="220" rx="10" fill="#1a1209"/>
+        <rect x="32" y="26" width="136" height="212" rx="8" fill="#0d0a06"/>
+        <!-- glass glare -->
+        <line x1="36" y1="30" x2="58" y2="230" stroke="rgba(255,255,255,0.04)" stroke-width="14" stroke-linecap="round"/>
+
+        <!-- SLOT CONTAINER — managed by JS, clipped to display area -->
+        <clipPath id="display-clip">
+          <rect x="32" y="26" width="136" height="212" rx="8"/>
+        </clipPath>
+        <g id="vm-slots" clip-path="url(#display-clip)"></g>
+
+        <!-- IDLE overlay (shown when 0 selected) -->
+        <g id="vm-idle">
+          <rect x="32" y="26" width="136" height="212" rx="8" fill="#0d0a06"/>
+          <text x="100" y="110" text-anchor="middle" font-size="28" fill="rgba(240,125,0,0.15)" font-family="sans-serif">☕🧃🍫</text>
+          <text x="100" y="145" text-anchor="middle" font-size="8" fill="rgba(240,125,0,0.4)" font-family="monospace" letter-spacing="1">GENUSS AUTOMATEN</text>
+          <rect x="50" y="155" width="100" height="2" rx="1" fill="rgba(240,125,0,0.15)"/>
+          <text x="100" y="175" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.15)" font-family="monospace">WÄHLEN SIE AUS →</text>
+        </g>
+
+        <!-- KEYPAD AREA -->
+        <rect x="28" y="252" width="144" height="88" rx="10" fill="rgba(0,0,0,0.22)"/>
+        <circle cx="70"  cy="272" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="100" cy="272" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="130" cy="272" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="70"  cy="292" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="100" cy="292" r="7" fill="rgba(240,125,0,0.45)"/>
+        <circle cx="130" cy="292" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="70"  cy="312" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="100" cy="312" r="7" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="130" cy="312" r="7" fill="rgba(255,255,255,0.1)"/>
+
+        <!-- COIN SLOT + TRAY -->
+        <rect x="50" y="350" width="100" height="7" rx="3.5" fill="rgba(0,0,0,0.35)"/>
+        <rect x="28" y="368" width="144" height="24" rx="6" fill="rgba(0,0,0,0.28)"/>
+        <rect x="32" y="372" width="136" height="16" rx="4" fill="rgba(0,0,0,0.38)"/>
+
+        <!-- LEGS -->
+        <rect x="32" y="396" width="22" height="14" rx="5" fill="#c06000"/>
+        <rect x="146" y="396" width="22" height="14" rx="5" fill="#c06000"/>
+      </svg>
+      <div class="vm-status-label" id="vm-status">Wählen Sie eine Option ↗</div>
+    </div>
+  </div>
+</div><!-- /.vm-col -->
+
+<!-- Stepper -->
+<div class="wizard-card">
+
+    <div class="thankyou" id="thankyou">
+      <div class="ty-icon">✓</div>
+      <h3>Vielen Dank für Ihre Anfrage!</h3>
+      <p>Wir haben Ihre Angaben erhalten und melden uns in Kürze bei Ihnen. Wir freuen uns auf das Gespräch.</p>
+    </div>
+
+    <div class="progress-wrap" id="progress-wrap">
+      <div class="progress-label" id="step-label">Schritt 1 von 5</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step active" id="step-1">
+      <div class="step-question">Suchen Sie nach einer betreuten Automatenlösung?</div>
+      <div class="option-list">
+        <label class="option-label radio" data-group="s1" data-val="Ja">
+          <input type="radio" name="s1" value="Ja">
+          <span class="custom-box"></span> Ja, betreut
+        </label>
+        <label class="option-label radio" data-group="s1" data-val="Nein">
+          <input type="radio" name="s1" value="Nein">
+          <span class="custom-box"></span> Nein, eigenständig
+        </label>
+      </div>
+      <div class="step-error" id="err-1">Bitte wählen Sie eine Option aus.</div>
+      <div class="btn-row">
+        <button class="btn btn-next" onclick="nextStep(1)">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step-2">
+      <div class="step-question">Nach welchen Automatenlösungen suchen Sie?</div>
+      <div class="option-list">
+        <label class="option-label" data-group="s2" data-val="Heißgetränkeautomat" data-vm="heiss">
+          <input type="checkbox" name="s2" value="Heißgetränkeautomat">
+          <span class="custom-box"></span> Heißgetränkeautomat
+        </label>
+        <label class="option-label" data-group="s2" data-val="Getränkeautomat" data-vm="getraenke">
+          <input type="checkbox" name="s2" value="Getränkeautomat">
+          <span class="custom-box"></span> Getränkeautomat
+        </label>
+        <label class="option-label" data-group="s2" data-val="Snackautomat" data-vm="snack">
+          <input type="checkbox" name="s2" value="Snackautomat">
+          <span class="custom-box"></span> Snackautomat
+        </label>
+        <label class="option-label" data-group="s2" data-val="Warme Speisen" data-vm="warm">
+          <input type="checkbox" name="s2" value="Warme Speisen">
+          <span class="custom-box"></span> Warme Speisen
+        </label>
+        <label class="option-label" data-group="s2" data-val="Individuelle Lösung" data-vm="custom">
+          <input type="checkbox" name="s2" value="Individuelle Lösung">
+          <span class="custom-box"></span> Individuelle Lösung
+        </label>
+      </div>
+      <div class="step-error" id="err-2">Bitte wählen Sie mindestens eine Option aus.</div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevStep(2)">Zurück</button>
+        <button class="btn btn-next" onclick="nextStep(2)">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step-3">
+      <div class="step-question">Wie viele Mitarbeiter sind täglich am Standort?</div>
+      <div class="option-list">
+        <label class="option-label radio" data-group="s3" data-val="Unter 100">
+          <input type="radio" name="s3" value="Unter 100">
+          <span class="custom-box"></span> Unter 100
+        </label>
+        <label class="option-label radio" data-group="s3" data-val="100 – 300">
+          <input type="radio" name="s3" value="100 – 300">
+          <span class="custom-box"></span> 100 – 300
+        </label>
+        <label class="option-label radio" data-group="s3" data-val="300 – 500">
+          <input type="radio" name="s3" value="300 – 500">
+          <span class="custom-box"></span> 300 – 500
+        </label>
+        <label class="option-label radio" data-group="s3" data-val="Über 500">
+          <input type="radio" name="s3" value="Über 500">
+          <span class="custom-box"></span> Über 500
+        </label>
+      </div>
+      <div class="step-error" id="err-3">Bitte wählen Sie eine Option aus.</div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevStep(3)">Zurück</button>
+        <button class="btn btn-next" onclick="nextStep(3)">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="step-4">
+      <div class="step-question">In welchem Bundesland ist Ihr Betrieb?</div>
+      <div class="option-list">
+        <label class="option-label radio" data-group="s4" data-val="Wien">
+          <input type="radio" name="s4" value="Wien">
+          <span class="custom-box"></span> Wien
+        </label>
+        <label class="option-label radio" data-group="s4" data-val="Niederösterreich">
+          <input type="radio" name="s4" value="Niederösterreich">
+          <span class="custom-box"></span> Niederösterreich
+        </label>
+        <label class="option-label radio" data-group="s4" data-val="Anderes Bundesland">
+          <input type="radio" name="s4" value="Anderes Bundesland">
+          <span class="custom-box"></span> Anderes Bundesland
+        </label>
+      </div>
+      <div class="step-error" id="err-4">Bitte wählen Sie eine Option aus.</div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevStep(4)">Zurück</button>
+        <button class="btn btn-next" onclick="nextStep(4)">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="step-5">
+      <p style="font-size:14px;font-weight:600;color:#555;text-align:center;margin-bottom:22px;line-height:1.6;">
+        Danke für Ihre Antworten — wir prüfen alles und kontaktieren Sie in Kürze.
+      </p>
+
+      <div class="hp-field" aria-hidden="true" tabindex="-1">
+        <label for="hp_name">Name (nicht ausfüllen)</label>
+        <input type="text" id="hp_name" name="hp_name" autocomplete="off" tabindex="-1">
+      </div>
+      <input type="hidden" id="form_timestamp" name="form_timestamp">
+      <input type="hidden" id="csrf_token" name="csrf_token">
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Vorname <span class="req">*</span></label>
+          <input type="text" id="f_vorname" placeholder="Ihr Vorname" autocomplete="given-name" aria-required="true">
+          <span class="field-error">Bitte geben Sie Ihren Vornamen ein.</span>
+        </div>
+        <div class="form-field">
+          <label>Nachname <span class="req">*</span></label>
+          <input type="text" id="f_nachname" placeholder="Ihr Nachname" autocomplete="family-name" aria-required="true">
+          <span class="field-error">Bitte geben Sie Ihren Nachnamen ein.</span>
+        </div>
+        <div class="form-field">
+          <label>Telefon <span class="req">*</span></label>
+          <input type="tel" id="f_tel" placeholder="+43..." autocomplete="tel" aria-required="true">
+          <span class="field-error">Bitte geben Sie eine gültige Telefonnummer ein.</span>
+        </div>
+        <div class="form-field">
+          <label>E-Mail <span class="req">*</span></label>
+          <input type="email" id="f_email" placeholder="name@beispiel.at" autocomplete="email" aria-required="true">
+          <span class="field-error">Bitte geben Sie eine gültige E-Mail-Adresse ein.</span>
+        </div>
+      </div>
+
+      <div class="step-error" id="err-5" style="margin-top:6px;"></div>
+
+      <div class="btn-row" style="margin-top:14px; margin-bottom:0;">
+        <button class="btn btn-back" onclick="prevStep(5)">Zurück</button>
+      </div>
+      <button class="btn-send" onclick="submitForm()">Anfrage absenden</button>
+    </div>
+
+  </div>
+
+</div><!-- /.wizard-row -->
+
+<div class="wizard-info">
+  <div class="left-copy">
+    <h2>Ihr Automaten-Partner</h2>
+    <p>Gemeinsam finden wir die perfekte Automatenlösung für Ihr Unternehmen.</p>
+    <p>Jedes Unternehmen ist anders — deshalb passen wir unsere Lösungen genau an Ihre Bedürfnisse an.</p>
+    <p><strong>Ist die passende Lösung dabei?</strong><br>
+    Schnell, unverbindlich und perfekt auf Ihr Unternehmen abgestimmt.</p>
+  </div>
+  <div class="contact-chips">
+    <div class="chip">
+      <div class="chip-icon">📍</div>
+      <div>
+        <div class="chip-label">Standort</div>
+        <div class="chip-value">Wien, Österreich</div>
+      </div>
+    </div>
+    <div class="chip">
+      <div class="chip-icon">✉️</div>
+      <div>
+        <div class="chip-label">E-Mail</div>
+        <div class="chip-value">office@genussautomaten.at</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.wizard-inner -->
+</section><!-- /.wizard-section -->
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <img src="assets/images/logo-1.png" alt="Genussautomaten" onerror="this.style.display='none'">
+          Genussautomaten
+        </a>
+        <p>Modernste Verkaufsautomaten für Unternehmen in Wien und Umgebung – zuverlässig, flexibel und vollständig betreut.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Automatenlösungen</h4>
+        <ul>
+          <li><a href="heissgetraenke.html">Heißgetränke-Automaten</a></li>
+          <li><a href="getraenke.html">Getränke-Automaten</a></li>
+          <li><a href="snack.html">Snack-Automaten</a></li>
+          <li><a href="genuss-station.html">Genuss-Station</a></li>
+          <li><a href="individuelle-loesung.html">Individuelle Lösung</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Unternehmen</h4>
+        <ul>
+          <li><a href="ueber-uns.html">Über uns</a></li>
+          <li><a href="service.html">Service</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontakt</h4>
+        <p style="font-size:0.88rem;color:rgba(255,255,255,0.6);">Wien, Österreich<br>office@genussautomaten.at</p>
+        <a href="kontakt.html" class="btn btn-primary" style="margin-top:16px;font-size:0.85rem;padding:10px 18px;">Jetzt anfragen</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 – Genussautomaten GmbH. Alle Rechte vorbehalten.</span>
+      <span>Developed by <a href="https://nangacss.com/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">NANGAcss</a></span>
+    </div>
+  </div>
+</footer>
+<script>
+  const TOTAL_STEPS = 5;
+  let currentStep = 1;
+  document.getElementById('form_timestamp').value = Date.now();
+  // ── CSRF TOKEN (double-submit cookie pattern) ──
+  function generateCSRF() {
+    const arr = new Uint8Array(24);
+    crypto.getRandomValues(arr);
+    return Array.from(arr, b => b.toString(16).padStart(2,'0')).join('');
+  }
+  const csrfToken = generateCSRF();
+  document.getElementById('csrf_token').value = csrfToken;
+  // Also set as cookie so server can verify double-submit
+  document.cookie = `csrf_token=${csrfToken}; SameSite=Strict; Secure; Path=/`;
+
+
+
+  // ── INPUT SANITIZATION ──
+  function sanitize(str) {
+    return str.trim()
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#x27;');
+  }
+
+  // ─── SLOT DEFINITIONS ───
+  // Each "key" maps to: bg color, label, and an SVG inner drawing function
+  const SLOT_DEFS = {
+    heiss: {
+      label: 'Heißgetränke',
+      bg: '#1a0800',
+      accent: '#c0692a',
+      draw: (cx, cy, h) => {
+        // cup body
+        const cw = 28, ch = Math.min(h * 0.55, 36);
+        const cx1 = cx - 18, cx2 = cx + 18;
+        const top = cy - ch / 2, bot = cy + ch / 2;
+        // cup 1
+        const c1 = `
+          <path d="M${cx1-cw/2+4} ${top} L${cx1-cw/2} ${bot} L${cx1+cw/2} ${bot} L${cx1+cw/2-4} ${top} Z" fill="#8B5E3C"/>
+          <rect x="${cx1-cw/2+1}" y="${top-4}" width="${cw-2}" height="5" rx="2" fill="#6B3F1F"/>
+          <path d="M${cx1+cw/2} ${top+4} Q${cx1+cw/2+10} ${top+4} ${cx1+cw/2+10} ${cy} Q${cx1+cw/2+10} ${bot-4} ${cx1+cw/2} ${bot-4}" stroke="#8B5E3C" stroke-width="2.5" fill="none"/>
+        `;
+        // cup 2
+        const c2 = `
+          <path d="M${cx2-cw/2+4} ${top} L${cx2-cw/2} ${bot} L${cx2+cw/2} ${bot} L${cx2+cw/2-4} ${top} Z" fill="#8B5E3C"/>
+          <rect x="${cx2-cw/2+1}" y="${top-4}" width="${cw-2}" height="5" rx="2" fill="#6B3F1F"/>
+          <path d="M${cx2+cw/2} ${top+4} Q${cx2+cw/2+10} ${top+4} ${cx2+cw/2+10} ${cy} Q${cx2+cw/2+10} ${bot-4} ${cx2+cw/2} ${bot-4}" stroke="#8B5E3C" stroke-width="2.5" fill="none"/>
+        `;
+        // steam wisps (static curves — no animation, user asked no constant motion)
+        const steam = `
+          <path d="M${cx1-6} ${top-5} Q${cx1-4} ${top-14} ${cx1-6} ${top-22}" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx1+4} ${top-5} Q${cx1+6} ${top-16} ${cx1+4} ${top-24}" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx2-6} ${top-5} Q${cx2-4} ${top-14} ${cx2-6} ${top-22}" stroke="rgba(255,255,255,0.28)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx2+4} ${top-5} Q${cx2+6} ${top-16} ${cx2+4} ${top-24}" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        `;
+        return c1 + c2 + steam;
+      }
+    },
+    getraenke: {
+      label: 'Getränke',
+      bg: '#001510',
+      accent: '#1e88e5',
+      draw: (cx, cy, h) => {
+        // row of bottles/cans
+        const colors = ['#1e88e5','#43a047','#e53935','#fb8c00','#ab47bc'];
+        const n = 5, gap = 22;
+        const startX = cx - (n - 1) * gap / 2;
+        const bh = Math.min(h * 0.6, 38), bw = 12;
+        let out = '';
+        for (let i = 0; i < n; i++) {
+          const bx = startX + i * gap;
+          const col = colors[i];
+          // bottle shape: narrow neck + wider body
+          out += `
+            <rect x="${bx-bw/2+2}" y="${cy-bh/2}" width="${bw-4}" height="${bh*0.25}" rx="2" fill="${col}" opacity="0.9"/>
+            <rect x="${bx-bw/2}" y="${cy-bh/2+bh*0.25}" width="${bw}" height="${bh*0.75}" rx="3" fill="${col}"/>
+            <rect x="${bx-bw/2+2}" y="${cy-bh/2+bh*0.25}" width="4" height="${bh*0.4}" rx="1" fill="rgba(255,255,255,0.12)"/>
+          `;
+        }
+        return out;
+      }
+    },
+    snack: {
+      label: 'Snacks',
+      bg: '#0d0d00',
+      accent: '#f9a825',
+      draw: (cx, cy, h) => {
+        // packages in a row
+        const colors = ['#f9a825','#ef5350','#66bb6a','#ab47bc','#26c6da'];
+        const labels = ['🍫','🍟','🍪','🍬','🥨'];
+        const n = 5, gap = 22;
+        const startX = cx - (n - 1) * gap / 2;
+        const pw = 16, ph = Math.min(h * 0.55, 32);
+        let out = '';
+        for (let i = 0; i < n; i++) {
+          const px = startX + i * gap;
+          const col = colors[i];
+          out += `
+            <rect x="${px-pw/2}" y="${cy-ph/2}" width="${pw}" height="${ph}" rx="3" fill="${col}" opacity="0.85"/>
+            <rect x="${px-pw/2+2}" y="${cy-ph/2+3}" width="${pw-4}" height="2" rx="1" fill="rgba(0,0,0,0.18)"/>
+            <rect x="${px-pw/2+2}" y="${cy-ph/2+7}" width="${pw-6}" height="2" rx="1" fill="rgba(0,0,0,0.12)"/>
+          `;
+        }
+        return out;
+      }
+    },
+    warm: {
+      label: 'Warme Speisen',
+      bg: '#0f0800',
+      accent: '#e07010',
+      draw: (cx, cy, h) => {
+        const r = Math.min(h * 0.38, 28);
+        // plate
+        const plate = `
+          <ellipse cx="${cx}" cy="${cy+r*0.3}" rx="${r+6}" ry="${r*0.25}" fill="#3a3a3a"/>
+          <ellipse cx="${cx}" cy="${cy+r*0.1}" rx="${r+4}" ry="${r*0.22}" fill="#4a4a4a"/>
+          <ellipse cx="${cx}" cy="${cy-r*0.1}" rx="${r}" ry="${r*0.65}" fill="#c8860a"/>
+          <ellipse cx="${cx-r*0.3}" cy="${cy-r*0.35}" rx="${r*0.45}" ry="${r*0.3}" fill="#e0a020"/>
+          <ellipse cx="${cx+r*0.25}" cy="${cy-r*0.2}" rx="${r*0.35}" ry="${r*0.22}" fill="#b07010"/>
+        `;
+        // static steam wisps
+        const steam = `
+          <path d="M${cx-16} ${cy-r*0.7} Q${cx-18} ${cy-r-10} ${cx-16} ${cy-r-22}" stroke="rgba(255,255,255,0.25)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M${cx-4} ${cy-r*0.8} Q${cx-6} ${cy-r-14} ${cx-4} ${cy-r-28}" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx+8} ${cy-r*0.8} Q${cx+6} ${cy-r-14} ${cx+8} ${cy-r-28}" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M${cx+20} ${cy-r*0.7} Q${cx+18} ${cy-r-10} ${cx+20} ${cy-r-22}" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        `;
+        return plate + steam;
+      }
+    },
+    custom: {
+      label: 'Individuell',
+      bg: '#06060f',
+      accent: '#F07D00',
+      draw: (cx, cy, h) => {
+        const r1 = Math.min(h * 0.32, 22), r2 = r1 * 0.55;
+        // Three gears: center big, two smaller flanking
+        const gear = (gx, gy, gr, teeth, col) => {
+          // gear as circle with dashes
+          return `
+            <circle cx="${gx}" cy="${gy}" r="${gr}" stroke="${col}" stroke-width="3" fill="none" stroke-dasharray="${teeth} ${teeth*0.5}" opacity="0.8"/>
+            <circle cx="${gx}" cy="${gy}" r="${gr*0.45}" fill="${col}" opacity="0.35"/>
+            <circle cx="${gx}" cy="${gy}" r="${gr*0.22}" fill="${col}" opacity="0.8"/>
+          `;
+        };
+        const g1 = gear(cx, cy + r1 * 0.1, r1, 7, '#F07D00');
+        const g2 = gear(cx - r1 - r2 + 4, cy - r1 * 0.5, r2, 5, '#FF9A2E');
+        const g3 = gear(cx + r1 + r2 - 4, cy - r1 * 0.5, r2, 5, '#FF9A2E');
+        // connector lines
+        const lines = `
+          <line x1="${cx - r1}" y1="${cy}" x2="${cx - r1 - r2 + 4 + r2}" y2="${cy - r1*0.5}" stroke="rgba(240,125,0,0.2)" stroke-width="1.5"/>
+          <line x1="${cx + r1}" y1="${cy}" x2="${cx + r1 + r2 - 4 - r2}" y2="${cy - r1*0.5}" stroke="rgba(240,125,0,0.2)" stroke-width="1.5"/>
+        `;
+        return lines + g1 + g2 + g3;
+      }
+    }
+  };
+
+  const DISPLAY_Y = 26, DISPLAY_H = 212, DISPLAY_X = 32, DISPLAY_W = 136;
+
+  function renderVMSlots(selectedKeys) {
+    const slotsEl = document.getElementById('vm-slots');
+    const idleEl  = document.getElementById('vm-idle');
+    const statusEl = document.getElementById('vm-status');
+
+    if (selectedKeys.length === 0) {
+      slotsEl.innerHTML = '';
+      idleEl.style.display = '';
+      statusEl.textContent = 'Wählen Sie eine Option ↗';
+      return;
+    }
+
+    idleEl.style.display = 'none';
+
+    const n = selectedKeys.length;
+    const slotH = DISPLAY_H / n;
+    let html = '';
+
+    selectedKeys.forEach((key, i) => {
+      const def = SLOT_DEFS[key];
+      if (!def) return;
+
+      const slotY = DISPLAY_Y + i * slotH;
+      const cx = DISPLAY_X + DISPLAY_W / 2;
+      const cy = slotY + slotH / 2;
+
+      // separator line
+      const sep = i > 0
+        ? `<line x1="${DISPLAY_X + 6}" y1="${slotY}" x2="${DISPLAY_X + DISPLAY_W - 6}" y2="${slotY}" stroke="rgba(240,125,0,0.2)" stroke-width="1"/>`
+        : '';
+
+      // background
+      const bg = `<rect x="${DISPLAY_X}" y="${slotY}" width="${DISPLAY_W}" height="${slotH}" fill="${def.bg}"/>`;
+
+      // label tag at bottom-right of slot
+      const labelFontSize = Math.max(6, Math.min(8, slotH * 0.14));
+      const label = `
+        <rect x="${DISPLAY_X + DISPLAY_W - 60}" y="${slotY + slotH - 14}" width="56" height="11" rx="3" fill="${def.accent}" opacity="0.25"/>
+        <text x="${DISPLAY_X + DISPLAY_W - 32}" y="${slotY + slotH - 6}" text-anchor="middle" font-size="${labelFontSize}" fill="${def.accent}" font-family="monospace" opacity="0.9">${def.label.toUpperCase()}</text>
+      `;
+
+      // drawn content
+      const content = def.draw(cx, cy, slotH);
+
+      // slide-in animation wrapper (use a unique id per slot)
+      html += `<g style="animation: slot-in 0.35s ease both; animation-delay: ${i * 0.07}s;">${sep}${bg}${content}${label}</g>`;
+    });
+
+    slotsEl.innerHTML = html;
+
+    // status
+    const names = selectedKeys.map(k => SLOT_DEFS[k]?.label || k);
+    statusEl.textContent = names.join(' · ');
+  }
+
+  // ── OPTION CLICK LOGIC ──
+  document.querySelectorAll('.option-label').forEach(label => {
+    const input = label.querySelector('input');
+    const group = label.dataset.group;
+
+    input.addEventListener('change', () => {
+      if (input.type === 'radio') {
+        document.querySelectorAll(`[data-group="${group}"]`).forEach(l => {
+          l.classList.remove('checked');
+        });
+        label.classList.add('checked');
+      } else {
+        label.classList.toggle('checked', input.checked);
+      }
+      if (group === 's2') {
+        const checked = [...document.querySelectorAll('[data-group="s2"].checked')];
+        const keys = checked.map(l => l.dataset.vm).filter(Boolean);
+        renderVMSlots(keys);
+      }
+    });
+
+    label.setAttribute('tabindex', '0');
+    label.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); input.click(); }
+    });
+  });
+
+  // ── PROGRESS ──
+  function updateProgress(step) {
+    document.getElementById('progress-fill').style.width = (step / TOTAL_STEPS * 100) + '%';
+    document.getElementById('step-label').textContent = `Schritt ${step} von ${TOTAL_STEPS}`;
+  }
+
+  // ── VALIDATION ──
+  function validateStep(step) {
+    const groups = { 1: 's1', 2: 's2', 3: 's3', 4: 's4' };
+    const group = groups[step];
+    if (!group) return true;
+
+    const isMulti = step === 2;
+    const found = isMulti
+      ? document.querySelectorAll(`[data-group="${group}"].checked`).length > 0
+      : !!document.querySelector(`[data-group="${group}"].checked`);
+
+    const errEl = document.getElementById(`err-${step}`);
+    if (!found) { errEl.style.display = 'block'; return false; }
+    errEl.style.display = 'none';
+    return true;
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`step-${n}`).classList.add('active');
+    currentStep = n;
+    updateProgress(n);
+    // re-sync VM when going back to step 2
+    if (n === 2) {
+      const checked = [...document.querySelectorAll('[data-group="s2"].checked')];
+      renderVMSlots(checked.map(l => l.dataset.vm).filter(Boolean));
+    }
+    if (n === 1) renderVMSlots([]);
+  }
+
+  function nextStep(from) {
+    if (!validateStep(from)) return;
+    if (from < TOTAL_STEPS) showStep(from + 1);
+  }
+
+  function prevStep(from) {
+    if (from > 1) showStep(from - 1);
+  }
+
+  // ── CONTACT FORM ──
+  function validateField(id, testFn) {
+    const el = document.getElementById(id);
+    const ok = testFn(el.value.trim());
+    el.classList.toggle('invalid', !ok);
+    return ok;
+  }
+
+  function submitForm() {
+    if (document.getElementById('hp_name').value !== '') { showThankyou(); return; }
+    const elapsed = Date.now() - parseInt(document.getElementById('form_timestamp').value, 10);
+    if (elapsed < 3000) { showThankyou(); return; }
+
+    const err5 = document.getElementById('err-5');
+    let valid = true;
+    valid &= validateField('f_vorname', v => v.length >= 2);
+    valid &= validateField('f_nachname', v => v.length >= 2);
+    valid &= validateField('f_tel', v => /^[\d\s\+\-\(\)]{7,20}$/.test(v));
+    valid &= validateField('f_email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+
+    if (!valid) { err5.style.display = 'block'; err5.textContent = 'Bitte überprüfen Sie die markierten Felder.'; return; }
+    err5.style.display = 'none';
+
+    const data = {
+      betreut:     document.querySelector('[data-group="s1"].checked')?.dataset.val,
+      automaten:   [...document.querySelectorAll('[data-group="s2"].checked')].map(l => l.dataset.val),
+      mitarbeiter: document.querySelector('[data-group="s3"].checked')?.dataset.val,
+      bundesland:  document.querySelector('[data-group="s4"].checked')?.dataset.val,
+      vorname:     sanitize(document.getElementById('f_vorname').value),
+      nachname:    sanitize(document.getElementById('f_nachname').value),
+      telefon:     sanitize(document.getElementById('f_tel').value),
+      email:       sanitize(document.getElementById('f_email').value),
+    };
+    // Data ready — send via fetch('/api/contact', ...) to your backend
+    showThankyou();
+  }
+
+  function showThankyou() {
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+    document.getElementById('thankyou').style.display = 'block';
+    renderVMSlots([]);
+    document.getElementById('vm-status').textContent = '✓ Anfrage gesendet!';
+  }
+
+  ['f_vorname','f_nachname'].forEach(id => {
+    document.getElementById(id).addEventListener('blur', function() {
+      this.classList.toggle('invalid', this.value.trim().length < 2);
+    });
+  });
+  document.getElementById('f_tel').addEventListener('blur', function() {
+    this.classList.toggle('invalid', !/^[\d\s\+\-\(\)]{7,20}$/.test(this.value.trim()));
+  });
+  document.getElementById('f_email').addEventListener('blur', function() {
+    this.classList.toggle('invalid', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim()));
+  });
+</script>
+</body>
+</html>
