@@ -2773,3 +2773,20 @@ ul { list-style: none; }
   .section { padding: 48px 16px; }
   .hero h1 { font-size: clamp(1.6rem, 8vw, 2.1rem); }
 }
+
+/* ===========================
+   FIX: border-radius clipping with transforms
+   Forces own stacking context so overflow:hidden clips
+   correctly even when a parent has an active transform
+   (fade-in animation bug fix)
+   =========================== */
+.feature-image,
+.produkt-detail__image,
+.service-flow__image,
+.genuss-station-image img,
+.automaten-card-image,
+.gs-product-frame,
+.gs-split__image,
+.ps-card {
+  transform: translateZ(0);
+}
