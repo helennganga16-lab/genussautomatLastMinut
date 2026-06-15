@@ -26,9 +26,4 @@ TODO.md
 # Sensitive config
 config.php
 
-# Large media files
-assets/videos/
-*.mp4
-*.mov
-*.avi
-*.png
+# Large media files (none currently exceed limits)
