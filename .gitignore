@@ -25,3 +25,9 @@ TODO.md
 
 # Sensitive config
 config.php
+
+# Large media files
+assets/videos/
+*.mp4
+*.mov
+*.avi
