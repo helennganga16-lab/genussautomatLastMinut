@@ -148,16 +148,16 @@ ul { list-style: none; }
   position: absolute;
   top: calc(100% + 10px);
   left: 0;
-  background: var(--dark);
-  border-radius: var(--radius);
-  min-width: 240px;
-  padding: 8px 0;
+  background: var(--orange);
+  border-radius: 14px;
+  min-width: 260px;
+  padding: 0;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
   transition: all var(--transition);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 12px 40px rgba(240,125,0,0.35);
+  overflow: hidden;
 }
 
 .nav-menu > li:hover .dropdown {
@@ -166,15 +166,24 @@ ul { list-style: none; }
   transform: translateY(0);
 }
 
-.dropdown a {
-  display: block;
-  color: rgba(255,255,255,0.8);
-  font-size: 0.88rem;
-  padding: 10px 20px;
-  transition: color var(--transition), background var(--transition);
+.dropdown li {
+  border-bottom: 1px solid rgba(255,255,255,0.25);
 }
 
-.dropdown a:hover { color: var(--orange); background: rgba(255,128,0,0.08); }
+.dropdown li:last-child {
+  border-bottom: none;
+}
+
+.dropdown a {
+  display: block;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 16px 24px;
+  transition: background var(--transition);
+}
+
+.dropdown a:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
 .nav-cta {
   background: var(--orange) !important;
@@ -255,9 +264,9 @@ ul { list-style: none; }
 }
 
 .hero--section {
-  height: auto;
-  min-height: 520px;
-  padding: 170px 20px 120px;
+  height: 100vh;
+  min-height: 600px;
+  padding: 100px 20px 60px;
 }
 
 .hero--section .scroll-hint {
@@ -624,19 +633,20 @@ ul { list-style: none; }
 }
 
 .automaten-auswahl__card > span {
-  width: 100%;
-  display: inline-flex;
+  display: flex;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
   min-height: 56px;
-  padding: 0.9rem 1.25rem;
+  padding: 0.9rem 0.5rem;
   background: #FF8000;
   color: #fff;
   border-radius: 9999px;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   font-weight: 400;
   box-shadow: 0 10px 30px rgba(255,128,0,0.24);
+  white-space: nowrap;
 }
 
 .automaten-auswahl__card > span .material-symbols-outlined {
@@ -1352,6 +1362,7 @@ ul { list-style: none; }
   height: auto;
   margin: 0 auto;
   background: #fff9f6;
+  border-radius: 1.25rem;
 }
 
 /* ===========================
@@ -1725,15 +1736,33 @@ ul { list-style: none; }
   .footer-grid { grid-template-columns: 1fr; }
 }
 
-.footer-brand .logo { margin-bottom: 16px; color: var(--orange); }
-.footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 280px; }
+.footer-brand .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--orange);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.footer-brand .logo img { width: 48px; height: 48px; object-fit: contain; }
+.footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 280px; color: rgba(255,255,255,0.55); }
 
-.footer-col h4 {
-  font-size: 0.75rem;
+.footer-brand__label {
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.35);
+  margin: 20px 0 8px;
+}
+
+.footer-col h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #fff;
   margin-bottom: 20px;
 }
 
@@ -1741,7 +1770,7 @@ ul { list-style: none; }
 
 .footer-col ul li a {
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.55);
   transition: color var(--transition);
 }
 
@@ -1750,20 +1779,25 @@ ul { list-style: none; }
 .footer-col .contact-link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.65);
-  margin-bottom: 10px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 12px;
+}
+.footer-col .contact-link .material-symbols-outlined {
+  font-size: 1.1rem;
+  color: var(--orange);
+  flex-shrink: 0;
 }
 
-.footer-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.footer-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .footer-tag {
   font-size: 0.75rem;
-  padding: 4px 10px;
-  border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 12px;
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 20px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.45);
 }
 
 .footer-bottom {
@@ -1774,9 +1808,10 @@ ul { list-style: none; }
   flex-wrap: wrap;
   gap: 12px;
   font-size: 0.82rem;
+  color: rgba(255,255,255,0.35);
 }
 
-.footer-bottom a { color: rgba(255,255,255,0.4); transition: color var(--transition); }
+.footer-bottom a { color: rgba(255,255,255,0.35); transition: color var(--transition); }
 .footer-bottom a:hover { color: var(--orange); }
 
 /* ===========================
@@ -1818,6 +1853,7 @@ ul { list-style: none; }
 .automaten-card-image {
   aspect-ratio: 3/2;
   overflow: hidden;
+  border-radius: 1.25rem;
   background: var(--gray-light);
   display: flex;
   align-items: center;
@@ -2029,7 +2065,7 @@ ul { list-style: none; }
   width: min(1100px, 100%);
   margin: 0 auto;
   border: 0;
-  border-radius: 0;
+  border-radius: 1.25rem;
   overflow: hidden;
   background: #fbf5ec;
 }
@@ -2105,6 +2141,7 @@ ul { list-style: none; }
 .gs-process__inner img {
   max-width: 980px;
   margin: 0 auto;
+  border-radius: 1.25rem;
 }
 
 .gs-process__notes {
@@ -2606,6 +2643,8 @@ ul { list-style: none; }
 /* ===========================
    RESPONSIVE
    =========================== */
+
+/* --- 1024px: Tablet landscape --- */
 @media (max-width: 1024px) {
   .nav-menu { gap: 4px; }
   .nav-menu > li > a { padding: 8px 10px; }
@@ -2613,30 +2652,16 @@ ul { list-style: none; }
   .service-showcase__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 640px) {
-  .vorteile-grid { grid-template-columns: 1fr; }
-}
-
+/* --- 960px: Tablet --- */
 @media (max-width: 960px) {
   .vorteile-grid { grid-template-columns: repeat(2, 1fr); }
-  .produkt-detail__inner {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  .service-flow__inner {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  .service-flow__inner--reverse .service-flow__image {
-    order: 0;
-  }
+  .produkt-detail__inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .service-flow__inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .service-flow__inner--reverse .service-flow__image { order: 0; }
   .gs-split__inner,
   .gs-card-grid,
   .steamer-section__grid,
-  .dampf-quality-section__grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+  .dampf-quality-section__grid { grid-template-columns: 1fr; gap: 2rem; }
   .gs-process__notes {
     position: static;
     display: grid;
@@ -2644,98 +2669,107 @@ ul { list-style: none; }
     gap: 1rem;
     margin-bottom: 2rem;
   }
-  .gs-note {
-    position: relative;
-    inset: auto;
-    width: auto;
-  }
+  .gs-note { position: relative; inset: auto; width: auto; }
 }
 
-@media (max-width: 640px) {
-  .scroll-hint { bottom: 2rem; }
-  .ps-slide { flex: 0 0 80%; }
-  .ps-arrow--prev { left: 4px; }
-  .ps-arrow--next { right: 4px; }
-  .gs-benefit-grid,
-  .gs-steam-grid,
-  .gs-dish-row,
-  .gs-process__notes,
-  .ga-icon-card-section__grid,
-  .steamer-section__grid,
-  .dampf-quality-section__grid {
-    grid-template-columns: 1fr;
-  }
-  .gs-hero {
-    min-height: 74vh;
-    padding: 108px 20px 84px;
-  }
-  .gs-hero__overlay {
-    background: linear-gradient(90deg, rgba(15,10,4,0.82), rgba(15,10,4,0.46));
-  }
-  .gs-happy,
-  .gs-intro,
-  .gs-split,
-  .gs-product-band,
-  .gs-card-band,
-  .gs-process,
-  .gs-benefits,
-  .gs-steam,
-  .gs-menu {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .gs-dark-card,
-  .gs-benefit-grid article,
-  .gs-steam-grid article {
-    padding: 1.5rem;
-  }
-}
-
+/* --- 768px: Mobile --- */
 @media (max-width: 768px) {
   .nav-menu { display: none; }
   .mobile-toggle { display: flex; }
   .mobile-menu { display: block; }
 
   .section { padding: 60px 20px; }
-  .v2-happy { padding: 4rem 1.5rem 4.5rem; }
-  .automaten-auswahl { padding: 4rem 1.5rem 4.5rem; }
-  .automaten-auswahl__grid {
-    grid-template-columns: 1fr;
-    margin-top: 4rem;
-  }
-  .automaten-auswahl__card {
-    min-height: 290px;
-    padding-top: 2rem;
-  }
-  .produkt-intro { padding: 4rem 1.5rem 2.5rem; }
-  .produkt-detail { padding: 2.5rem 1.5rem 4.5rem; }
-  .service-showcase { padding: 4rem 1.5rem 4.5rem; }
-  .service-showcase__grid {
-    grid-template-columns: 1fr;
-    margin-top: 3.5rem;
-  }
-  .service-flow { padding: 4.5rem 1.5rem; }
-  .image-banner { padding: 4rem 2rem 4.5rem; }
-  .genuss-station-image { padding: 3.5rem 1.5rem; }
 
-  .footer-grid { grid-template-columns: 1fr 1fr; }
+  /* Hero */
+  .hero-content { padding: 0 4px; }
+  .hero h1 { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+  .hero-sub { font-size: 0.97rem; }
 
+  /* v2-happy */
+  .v2-happy { padding: 3.5rem 1.25rem 4rem; }
+  .v2-happy__title { font-size: clamp(1.5rem, 5.5vw, 2.2rem); }
+
+  /* Vorteile */
+  .vorteile-section { padding: 4rem 1.25rem; }
+  .vorteile-title { font-size: clamp(1.5rem, 5vw, 2rem); }
+  .vorteile-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .vorteile-card { padding: 1.75rem 1.25rem 1.5rem; }
+
+  /* Produkt sections */
+  .produkt-intro { padding: 3.5rem 1.25rem 2rem; }
+  .produkt-intro__title { font-size: clamp(1.4rem, 5vw, 1.9rem); }
+  .produkt-detail { padding: 2rem 1.25rem 4rem; }
+
+  /* Feature items */
   .feature-item { grid-template-columns: 1fr !important; }
   .feature-item.reverse .feature-text { order: 0; }
-  .feature-image--natural {
-    max-width: 100%;
-    justify-self: center;
-  }
+  .feature-image--natural { max-width: 100%; justify-self: center; }
 
-  .hero h1 { font-size: clamp(1.9rem, 6vw, 2.5rem); }
-  .hero-sub { font-size: 1rem; }
+  /* Section titles */
+  .section-title { font-size: clamp(1.4rem, 5vw, 2rem); }
 
+  /* Automaten auswahl */
+  .automaten-auswahl { padding: 3.5rem 1.25rem 4rem; }
+  .automaten-auswahl__title { font-size: clamp(1.4rem, 5vw, 2rem); }
+  .automaten-auswahl__grid { grid-template-columns: 1fr; margin-top: 3rem; }
+  .automaten-auswahl__card { min-height: 260px; padding-top: 1.75rem; }
+
+  /* Service */
+  .service-showcase { padding: 3.5rem 1.25rem 4rem; }
+  .service-showcase__grid { grid-template-columns: 1fr; margin-top: 3rem; }
+  .service-flow { padding: 4rem 1.25rem; }
+
+  /* v2-konfigurator */
+  .v2-konfigurator { padding: 4rem 1.25rem; }
+  .v2-konfigurator__title { font-size: clamp(1.6rem, 5.5vw, 2.4rem); }
+  .v2-konfigurator__sub { font-size: 0.93rem; }
+
+  /* Other */
+  .image-banner { padding: 3.5rem 1.5rem 4rem; }
+  .genuss-station-image { padding: 3rem 1.25rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .scroll-hint { bottom: 2rem; }
 }
 
+/* --- 640px: Small mobile --- */
+@media (max-width: 640px) {
+  .ps-slide { flex: 0 0 85%; }
+  .ps-arrow--prev { left: 4px; }
+  .ps-arrow--next { right: 4px; }
+
+  /* Genuss-Station specific */
+  .gs-benefit-grid,
+  .gs-steam-grid,
+  .gs-dish-row,
+  .gs-process__notes,
+  .ga-icon-card-section__grid,
+  .steamer-section__grid,
+  .dampf-quality-section__grid { grid-template-columns: 1fr; }
+  .gs-hero { min-height: 74vh; padding: 108px 20px 84px; }
+  .gs-hero__overlay { background: linear-gradient(90deg, rgba(15,10,4,0.82), rgba(15,10,4,0.46)); }
+  .gs-happy, .gs-intro, .gs-split, .gs-product-band,
+  .gs-card-band, .gs-process, .gs-benefits, .gs-steam, .gs-menu {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .gs-dark-card, .gs-benefit-grid article, .gs-steam-grid article { padding: 1.5rem; }
+}
+
+/* --- 480px: Extra small --- */
 @media (max-width: 480px) {
   .header-inner { height: 65px; padding: 0 16px; }
   .logo img { height: 44px; }
+
+  /* Vorteile: 1 column on small phones */
+  .vorteile-grid { grid-template-columns: 1fr; }
+
   .footer-grid { grid-template-columns: 1fr; }
-  .contact-form { padding: 24px; }
+  .contact-form { padding: 20px; }
   .automaten-grid { grid-template-columns: 1fr; }
+
+  .v2-konfigurator { padding: 3rem 1rem; }
+  .v2-konfigurator__btn { font-size: 0.9rem; padding: 0.875rem 1.75rem; }
+
+  .section { padding: 48px 16px; }
+  .hero h1 { font-size: clamp(1.6rem, 8vw, 2.1rem); }
 }

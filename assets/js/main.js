@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // --- Sticky Header ---
   const header = document.querySelector('.site-header');
+  const alwaysScrolled = header.classList.contains('scrolled');
   const updateHeader = () => {
-    header.classList.toggle('scrolled', window.scrollY > 50);
+    header.classList.toggle('scrolled', alwaysScrolled || window.scrollY > 50);
   };
   updateHeader();
   window.addEventListener('scroll', updateHeader);
@@ -158,35 +159,35 @@ document.addEventListener('DOMContentLoaded', function () {
   if (psTrack && psDots && psViewport && psPrev && psNext) {
     const psSection = psViewport.closest('.ps-section');
     const hotDrinkSlides = [
-      { src: 'assets/images/1-Kaffee.png', title: 'Kaffee', sub: 'Kräftig & aromatisch' },
-      { src: 'assets/images/2-CafeLatte.png', title: 'Cafe Latte', sub: 'Sanft & cremig' },
-      { src: 'assets/images/3-Cappuchino.png', title: 'Cappuccino', sub: 'Mit feinem Milchschaum' },
-      { src: 'assets/images/4-Früchtetee.png', title: 'Früchtetee', sub: 'Warm & fruchtig' },
-      { src: 'assets/images/5-Zitronentee.png', title: 'Zitronentee', sub: 'Frisch & wohltuend' },
-      { src: 'assets/images/6-Heisse-Schokolade.png', title: 'Heiße Schokolade', sub: 'Süß & cremig' },
+      { src: 'assets/images/Heißgetränke/1-Kaffee.png', title: 'Kaffee', sub: 'Kräftig & aromatisch' },
+      { src: 'assets/images/Heißgetränke/2-CafeLatte.png', title: 'Cafe Latte', sub: 'Sanft & cremig' },
+      { src: 'assets/images/Heißgetränke/3-Cappuchino.png', title: 'Cappuccino', sub: 'Mit feinem Milchschaum' },
+      { src: 'assets/images/Heißgetränke/4-Früchtetee.png', title: 'Früchtetee', sub: 'Warm & fruchtig' },
+      { src: 'assets/images/Heißgetränke/5-Zitronentee.png', title: 'Zitronentee', sub: 'Frisch & wohltuend' },
+      { src: 'assets/images/Heißgetränke/6-Heisse-Schokolade.png', title: 'Heiße Schokolade', sub: 'Süß & cremig' },
     ];
     const drinkSlides = [
-      { src: 'assets/images/Getränke/1-CocaCola.webp', title: 'Coca-Cola', sub: 'Klassisch & erfrischend' },
-      { src: 'assets/images/Getränke/2-CocaCola-Zero.webp', title: 'Coca-Cola Zero', sub: 'Eiskalt & zuckerfrei' },
-      { src: 'assets/images/Getränke/3-Almdudler.webp', title: 'Almdudler', sub: 'Original Kräuterlimonade' },
-      { src: 'assets/images/Getränke/4-Marille-Sprizz.webp', title: 'Marille Sprizz', sub: 'Fruchtig & erfrischend' },
-      { src: 'assets/images/Getränke/5-Apfel-Sprizz.webp', title: 'Apfel Sprizz', sub: 'Frisch & fruchtig' },
-      { src: 'assets/images/Getränke/6-Johannisbeere-Sprizz.webp', title: 'Johannisbeere Sprizz', sub: 'Fruchtig-herb' },
-      { src: 'assets/images/Getränke/7-Eistee-Zitrone.webp', title: 'Eistee Zitrone', sub: 'Klassisch gekühlt' },
-      { src: 'assets/images/Getränke/8-Eistee-Pfirsich.webp', title: 'Eistee Pfirsich', sub: 'Klassisch gekühlt' },
-      { src: 'assets/images/Getränke/9-Sprite.webp', title: 'Sprite', sub: 'Zitronig & frisch' },
-      { src: 'assets/images/Getränke/10-Multivitamin.webp', title: 'Multivitamin', sub: 'Fruchtig & vielseitig' },
-      { src: 'assets/images/Getränke/11-Voeslauer-Balance.webp', title: 'Vöslauer Balance', sub: 'Leicht & erfrischend' },
-      { src: 'assets/images/Getränke/12-Voeslauer-Zitrone.webp', title: 'Vöslauer Zitrone', sub: 'Spritzig & frisch' },
-      { src: 'assets/images/Getränke/13-Makava.webp', title: 'Makava', sub: 'Belebend & herb' },
-      { src: 'assets/images/Getränke/14-Lemonaid.webp', title: 'Lemonaid', sub: 'Natürlich & frisch' },
-      { src: 'assets/images/Getränke/15-Eiskaffee.webp', title: 'Eiskaffee', sub: 'Kühl & cremig' },
-      { src: 'assets/images/Getränke/16-CocaCola.webp', title: 'Coca-Cola', sub: 'Klassisch & erfrischend' },
-      { src: 'assets/images/Getränke/17-CocaCola-Zero.webp', title: 'Coca-Cola Zero', sub: 'Eiskalt & zuckerfrei' },
-      { src: 'assets/images/Getränke/18-CocaCola-Lemon-Zero.webp', title: 'Coca-Cola Lemon Zero', sub: 'Zitronig & zuckerfrei' },
-      { src: 'assets/images/Getränke/19-Lemon-Soda.webp', title: 'Lemon Soda', sub: 'Spritzig & zitronig' },
-      { src: 'assets/images/Getränke/20-Schartner-Bombe.webp', title: 'Schartner Bombe', sub: 'Fruchtig prickelnd' },
-      { src: 'assets/images/Getränke/21-Fanta.webp', title: 'Fanta', sub: 'Fruchtig prickelnd' },
+      { src: 'assets/images/Getränke/1-CocaCola.webp', title: 'Coca-Cola', sub: 'Klassisch & erfrischend' },
+      { src: 'assets/images/Getränke/2-CocaCola-Zero.webp', title: 'Coca-Cola Zero', sub: 'Eiskalt & zuckerfrei' },
+      { src: 'assets/images/Getränke/3-Almdudler.webp', title: 'Almdudler', sub: 'Original Kräuterlimonade' },
+      { src: 'assets/images/Getränke/4-Marille-Sprizz.webp', title: 'Marille Sprizz', sub: 'Fruchtig & erfrischend' },
+      { src: 'assets/images/Getränke/5-Apfel-Sprizz.webp', title: 'Apfel Sprizz', sub: 'Frisch & fruchtig' },
+      { src: 'assets/images/Getränke/6-Johannisbeere-Sprizz.webp', title: 'Johannisbeere Sprizz', sub: 'Fruchtig-herb' },
+      { src: 'assets/images/Getränke/7-Eistee-Zitrone.webp', title: 'Eistee Zitrone', sub: 'Klassisch gekühlt' },
+      { src: 'assets/images/Getränke/8-Eistee-Pfirsich.webp', title: 'Eistee Pfirsich', sub: 'Klassisch gekühlt' },
+      { src: 'assets/images/Getränke/9-Sprite.webp', title: 'Sprite', sub: 'Zitronig & frisch' },
+      { src: 'assets/images/Getränke/10-Multivitamin.webp', title: 'Multivitamin', sub: 'Fruchtig & vielseitig' },
+      { src: 'assets/images/Getränke/11-Voeslauer-Balance.webp', title: 'Vöslauer Balance', sub: 'Leicht & erfrischend' },
+      { src: 'assets/images/Getränke/12-Voeslauer-Zitrone.webp', title: 'Vöslauer Zitrone', sub: 'Spritzig & frisch' },
+      { src: 'assets/images/Getränke/13-Makava.webp', title: 'Makava', sub: 'Belebend & herb' },
+      { src: 'assets/images/Getränke/14-Lemonaid.webp', title: 'Lemonaid', sub: 'Natürlich & frisch' },
+      { src: 'assets/images/Getränke/15-Eiskaffee.webp', title: 'Eiskaffee', sub: 'Kühl & cremig' },
+      { src: 'assets/images/Getränke/16-CocaCola.webp', title: 'Coca-Cola', sub: 'Klassisch & erfrischend' },
+      { src: 'assets/images/Getränke/17-CocaCola-Zero.webp', title: 'Coca-Cola Zero', sub: 'Eiskalt & zuckerfrei' },
+      { src: 'assets/images/Getränke/18-CocaCola-Lemon-Zero.webp', title: 'Coca-Cola Lemon Zero', sub: 'Zitronig & zuckerfrei' },
+      { src: 'assets/images/Getränke/19-Lemon-Soda.webp', title: 'Lemon Soda', sub: 'Spritzig & zitronig' },
+      { src: 'assets/images/Getränke/20-Schartner-Bombe.webp', title: 'Schartner Bombe', sub: 'Fruchtig prickelnd' },
+      { src: 'assets/images/Getränke/21-Fanta.webp', title: 'Fanta', sub: 'Fruchtig prickelnd' },
     ];
     const snackSlides = [
       { src: 'assets/images/snacks/1-Schokoriegel.webp', title: 'Schokoriegel', sub: 'Süß & klassisch' },
@@ -270,10 +271,12 @@ document.addEventListener('DOMContentLoaded', function () {
         dot.classList.toggle('ps-active', index === current);
       });
 
-      const perView = window.innerWidth <= 640 ? 1 : 3;
+      const isMobile = window.innerWidth <= 640;
+      const perView = isMobile ? 1 : 3;
       const slideWidth = psViewport.offsetWidth / perView;
-      const offset = window.innerWidth <= 640
-        ? -current * slideWidth + slideWidth * 0.1
+      // On mobile slides are 85% wide — center the active one with the correct offset
+      const offset = isMobile
+        ? psViewport.offsetWidth * (0.075 - current * 0.85)
         : -current * slideWidth + slideWidth;
       psTrack.style.transform = 'translateX(' + offset + 'px)';
     };

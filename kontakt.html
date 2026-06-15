@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<header class="site-header" id="siteHeader">
+<header class="site-header scrolled" id="siteHeader">
   <div class="header-inner">
     <a href="index.html" class="logo">
       <img src="assets/images/logo-1.png" alt="Genussautomaten Logo" onerror="this.style.display='none'">
@@ -60,30 +60,8 @@
   </div>
 </header>
 
-<section class="hero hero--section">
-  <div class="hero-video">
-    <video autoplay muted loop playsinline>
-      <source src="assets/videos/Genussautomaten.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="hero-overlay"></div>
-  <div class="hero-content fade-in">
-    <div class="hero-label">Kontakt</div>
-    <h1>Wir freuen uns von Ihnen zu hören!</h1>
-    <p class="hero-sub">Unverbindlich anfragen. Persönlich beraten.</p>
-  </div>
-  <div class="scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-  <div class="hero-curve" aria-hidden="true">
-    <svg viewBox="0 0 1440 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,54 C240,26 480,10 720,10 C960,10 1200,26 1440,54 L1440,56 L0,56 Z" fill="#221A0E"/>
-    </svg>
-  </div>
-</section>
 
-<section class="section contact-section">
+<section class="section contact-section" style="padding-top:120px;">
   <div class="container">
     <div class="contact-grid">
       <div class="contact-info fade-in">
@@ -160,11 +138,12 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="index.html" class="logo">
-          <img src="assets/images/logo-1.png" alt="Genussautomaten" onerror="this.style.display='none'">
+          <img src="assets/images/logo-original.png" alt="Genussautomaten">
           Genussautomaten
         </a>
         <p>Modernste Verkaufsautomaten für Unternehmen in Wien und Umgebung – zuverlässig, flexibel und vollständig betreut.</p>
-        <div class="footer-tags" style="margin-top:20px;">
+        <div class="footer-brand__label">Branchen</div>
+        <div class="footer-tags">
           <span class="footer-tag">Büro</span>
           <span class="footer-tag">Industrie</span>
           <span class="footer-tag">Logistik</span>
@@ -173,6 +152,7 @@
           <span class="footer-tag">Handel</span>
         </div>
       </div>
+
       <div class="footer-col">
         <h4>Automatenlösungen</h4>
         <ul>
@@ -183,29 +163,38 @@
           <li><a href="individuelle-loesung.html">Individuelle Lösung</a></li>
         </ul>
       </div>
+
       <div class="footer-col">
         <h4>Unternehmen</h4>
         <ul>
           <li><a href="ueber-uns.html">Über uns</a></li>
-          <li><a href="service.html">Service & Beratung</a></li>
+          <li><a href="service.html">Service &amp; Beratung</a></li>
           <li><a href="kontakt.html">Kontakt</a></li>
           <li><a href="impressum.html">Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-          <li><a href="agb.html">AGB´s</a></li>
+          <li><a href="datenschutz.html">Datenschutzerklärung</a></li>
+          <li><a href="agb.html">AGB's</a></li>
         </ul>
       </div>
+
       <div class="footer-col">
         <h4>Kontakt</h4>
-        <div class="contact-link"><span>📍</span> Wien, Österreich</div>
-        <div class="contact-link"><span>✉️</span> office@genussautomaten.at</div>
+        <div class="contact-link">
+          <span class="material-symbols-outlined">location_on</span>
+          Wien, Österreich
+        </div>
+        <div class="contact-link">
+          <span class="material-symbols-outlined">mail</span>
+          office@genussautomaten.at
+        </div>
         <div style="margin-top:20px;">
-          <a href="kontakt.html" class="btn btn-primary" style="font-size:0.85rem;padding:12px 20px;">Jetzt anfragen</a>
+          <a href="kontakt.html" class="btn btn-primary" style="font-size:0.85rem;padding:12px 24px;">Jetzt anfragen</a>
         </div>
       </div>
     </div>
+
     <div class="footer-bottom">
       <span>© 2024 – Genussautomaten GmbH. Alle Rechte vorbehalten.</span>
-      <span>Developed by <a href="https://nangacss.com/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">NANGAcss</a></span>
+      <span>Developed by <a href="https://nangacss.com/" target="_blank" rel="noopener">NANGAcss</a></span>
     </div>
   </div>
 </footer>
