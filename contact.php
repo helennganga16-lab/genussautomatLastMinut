@@ -15,7 +15,10 @@ $rateLimitFile = $rateLimitDir . '/' . md5($ip) . '.json';
 $maxRequests   = 5;
 $windowSec     = 3600;
 
-if (!is_dir($rateLimitDir)) { @mkdir($rateLimitDir, 0750, true); }
+if (!is_dir($rateLimitDir)) {
+    @mkdir($rateLimitDir, 0750, true);
+    @file_put_contents($rateLimitDir . '/.htaccess', "Deny from all\n");
+}
 $now = time();
 $rl  = ['count' => 0, 'reset_at' => $now + $windowSec];
 if (file_exists($rateLimitFile)) {
