@@ -6,7 +6,7 @@
   <title>Kontakt - Genussautomaten</title>
   <!-- Favicon -->
   <link rel="icon" href="assets/images/favicon.ico">
-  <link rel="apple-touch-icon" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/favicon.ico">
   <!-- Open Graph -->
   <!-- TODO: Datei assets/images/og-preview.jpg bereitstellen (empfohlen: 1200×630 px, Logo auf hellem Hintergrund) -->
   <meta property="og:type"        content="website">
@@ -104,20 +104,23 @@
               <div class="form-group">
                 <label for="unternehmensname">Unternehmensname *</label>
                 <input type="text" id="unternehmensname" name="unternehmensname" required placeholder="Ihr Unternehmen" maxlength="200">
+                <span class="form-field-error" id="err-unternehmensname"></span>
               </div>
               <div class="form-group">
                 <label for="adresse">Adresse</label>
-                <input type="text" id="adresse" name="adresse" placeholder="Straße, PLZ, Ort" maxlength="200">
+                <input type="text" id="adresse" name="adresse" placeholder="Straße, PLZ, Ort" maxlength="300">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="telefon">Telefon</label>
-                <input type="tel" id="telefon" name="telefon" placeholder="+43 ..." maxlength="30">
+                <input type="tel" id="telefon" name="telefon" placeholder="+43 ..." maxlength="50">
+                <span class="form-field-error" id="err-telefon"></span>
               </div>
               <div class="form-group">
                 <label for="email">E-Mail *</label>
                 <input type="email" id="email" name="email" required placeholder="ihre@email.at" maxlength="254">
+                <span class="form-field-error" id="err-email"></span>
               </div>
             </div>
             <div class="form-row">
@@ -127,7 +130,7 @@
               </div>
               <div class="form-group">
                 <label for="mitarbeiter">Anzahl der Mitarbeiter</label>
-                <input type="text" id="mitarbeiter" name="mitarbeiter" placeholder="z.B. 50–100" maxlength="50">
+                <input type="text" id="mitarbeiter" name="mitarbeiter" placeholder="z.B. 50–100" maxlength="100">
               </div>
             </div>
             <div class="form-group">
@@ -137,6 +140,7 @@
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
               Anfrage absenden →
             </button>
+            <p class="form-privacy">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="datenschutz.html">Datenschutzerklärung</a> zu.</p>
           </form>
         </div>
       </div>

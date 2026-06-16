@@ -66,28 +66,55 @@ document.addEventListener('DOMContentLoaded', function () {
       const msg = document.getElementById('formMessage');
 
       // Client-side validation — same rules as server (unified limits)
+      function setFieldError(inputEl, spanId, message) {
+        const span = document.getElementById(spanId);
+        if (span) { span.textContent = message; span.classList.toggle('visible', !!message); }
+        inputEl.classList.toggle('invalid', !!message);
+      }
+
       const firmEl   = form.querySelector('#unternehmensname');
       const emailEl  = form.querySelector('#email');
+      const telEl    = form.querySelector('#telefon');
+      const nachEl   = form.querySelector('#nachricht');
       const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const clientErrors = [];
+      const validTel   = /^[\d\s+\-()À-ɏ]{7,50}$/;
+      let hasErrors = false;
 
       if (!firmEl.value.trim()) {
-        clientErrors.push('Bitte geben Sie Ihren Unternehmensnamen an.');
-        firmEl.classList.add('invalid');
+        setFieldError(firmEl, 'err-unternehmensname', 'Bitte geben Sie Ihren Unternehmensnamen an.');
+        hasErrors = true;
       } else {
-        firmEl.classList.remove('invalid');
+        setFieldError(firmEl, 'err-unternehmensname', '');
       }
+
       if (!emailEl.value.trim() || !validEmail.test(emailEl.value.trim())) {
-        clientErrors.push('Bitte geben Sie eine gültige E-Mail-Adresse an.');
-        emailEl.classList.add('invalid');
+        setFieldError(emailEl, 'err-email', 'Bitte geben Sie eine gültige E-Mail-Adresse an.');
+        hasErrors = true;
       } else {
-        emailEl.classList.remove('invalid');
+        setFieldError(emailEl, 'err-email', '');
       }
-      if (clientErrors.length) {
+
+      if (telEl && telEl.value.trim() && !validTel.test(telEl.value.trim())) {
+        setFieldError(telEl, 'err-telefon', 'Bitte geben Sie eine gültige Telefonnummer ein (mind. 7 Zeichen).');
+        hasErrors = true;
+      } else if (telEl) {
+        setFieldError(telEl, 'err-telefon', '');
+      }
+
+      if (nachEl && nachEl.value.length > 5000) {
+        nachEl.classList.add('invalid');
+        hasErrors = true;
+      } else if (nachEl) {
+        nachEl.classList.remove('invalid');
+      }
+
+      if (hasErrors) {
         msg.className = 'form-message error';
-        msg.textContent = clientErrors.join(' ');
+        msg.textContent = 'Bitte überprüfen Sie die markierten Felder.';
         return;
       }
+      msg.className = '';
+      msg.textContent = '';
 
       btn.disabled = true;
       btn.textContent = 'Wird gesendet...';

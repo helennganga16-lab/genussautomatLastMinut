@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /config.php
+Disallow: /contact.php
+Disallow: /.env
+Sitemap: https://genussautomaten.at/sitemap.xml

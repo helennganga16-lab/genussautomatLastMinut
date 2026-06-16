@@ -1711,6 +1711,11 @@ ul { list-style: none; }
 .form-message.success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; display: block; }
 .form-message.error { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; display: block; }
 
+.form-field-error { font-size: 0.82rem; color: #c62828; margin-top: 4px; display: none; }
+.form-field-error.visible { display: block; }
+.form-privacy { font-size: 13px; color: #666; margin-top: 8px; text-align: center; }
+.form-privacy a { color: #F07D00; }
+
 /* ===========================
    FOOTER
    =========================== */
