@@ -56,10 +56,39 @@ document.addEventListener('DOMContentLoaded', function () {
   // --- Contact Form ---
   const form = document.getElementById('contactForm');
   if (form) {
+    // Set submit timestamp for server-side bot timing check (matches form_ts hidden field)
+    const formTs = form.querySelector('#form_ts');
+    if (formTs) formTs.value = Math.floor(Date.now() / 1000);
+
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       const btn = form.querySelector('button[type="submit"]');
       const msg = document.getElementById('formMessage');
+
+      // Client-side validation — same rules as server (unified limits)
+      const firmEl   = form.querySelector('#unternehmensname');
+      const emailEl  = form.querySelector('#email');
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const clientErrors = [];
+
+      if (!firmEl.value.trim()) {
+        clientErrors.push('Bitte geben Sie Ihren Unternehmensnamen an.');
+        firmEl.classList.add('invalid');
+      } else {
+        firmEl.classList.remove('invalid');
+      }
+      if (!emailEl.value.trim() || !validEmail.test(emailEl.value.trim())) {
+        clientErrors.push('Bitte geben Sie eine gültige E-Mail-Adresse an.');
+        emailEl.classList.add('invalid');
+      } else {
+        emailEl.classList.remove('invalid');
+      }
+      if (clientErrors.length) {
+        msg.className = 'form-message error';
+        msg.textContent = clientErrors.join(' ');
+        return;
+      }
+
       btn.disabled = true;
       btn.textContent = 'Wird gesendet...';
 

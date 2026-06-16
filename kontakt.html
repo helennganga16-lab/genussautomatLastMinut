@@ -89,39 +89,40 @@
           <div id="formMessage" class="form-message"></div>
           <form id="contactForm" novalidate>
             <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+            <input type="hidden" id="form_ts" name="form_ts">
             <div class="form-row">
               <div class="form-group">
                 <label for="unternehmensname">Unternehmensname *</label>
-                <input type="text" id="unternehmensname" name="unternehmensname" required placeholder="Ihr Unternehmen">
+                <input type="text" id="unternehmensname" name="unternehmensname" required placeholder="Ihr Unternehmen" maxlength="200">
               </div>
               <div class="form-group">
                 <label for="adresse">Adresse</label>
-                <input type="text" id="adresse" name="adresse" placeholder="Straße, PLZ, Ort">
+                <input type="text" id="adresse" name="adresse" placeholder="Straße, PLZ, Ort" maxlength="200">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="telefon">Telefon</label>
-                <input type="tel" id="telefon" name="telefon" placeholder="+43 ...">
+                <input type="tel" id="telefon" name="telefon" placeholder="+43 ..." maxlength="30">
               </div>
               <div class="form-group">
                 <label for="email">E-Mail *</label>
-                <input type="email" id="email" name="email" required placeholder="ihre@email.at">
+                <input type="email" id="email" name="email" required placeholder="ihre@email.at" maxlength="254">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="ansprechpartner">Ansprechpartner</label>
-                <input type="text" id="ansprechpartner" name="ansprechpartner" placeholder="Vor- und Nachname">
+                <input type="text" id="ansprechpartner" name="ansprechpartner" placeholder="Vor- und Nachname" maxlength="200">
               </div>
               <div class="form-group">
                 <label for="mitarbeiter">Anzahl der Mitarbeiter</label>
-                <input type="text" id="mitarbeiter" name="mitarbeiter" placeholder="z.B. 50–100">
+                <input type="text" id="mitarbeiter" name="mitarbeiter" placeholder="z.B. 50–100" maxlength="50">
               </div>
             </div>
             <div class="form-group">
               <label for="nachricht">Ihre Nachricht</label>
-              <textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie Ihre Anforderungen..."></textarea>
+              <textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie Ihre Anforderungen..." maxlength="5000"></textarea>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
               Anfrage absenden →

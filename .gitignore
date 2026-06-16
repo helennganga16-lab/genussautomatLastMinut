@@ -20,10 +20,12 @@ node_modules/
 # Personal notes
 TODO.md
 
-# Accidental folders
-{assets/
+# Accidental folders (removed — {assets/ was deleted)
 
 # Sensitive config
 config.php
+.env
+
+# Accidental junk
 
 # Large media files (none currently exceed limits)
