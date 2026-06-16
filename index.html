@@ -27,7 +27,7 @@
 <header class="site-header" id="siteHeader">
   <div class="header-inner">
     <a href="index.html" class="logo">
-      <img src="assets/images/logo-1.png" alt="Genussautomaten Logo" onerror="this.style.display='none'">
+      <img src="assets/images/logo-1.png" alt="Genussautomaten Logo">
       Genussautomaten
     </a>
     <nav>
@@ -119,7 +119,7 @@
   <div class="container">
     <div class="feature-item reverse fade-in" style="margin-bottom:80px;">
       <div class="feature-image feature-image--natural">
-        <img src="assets/images/01Automatenlösung.webp" alt="Automatenlösungen">
+        <img src="assets/images/01Automatenloesungen.webp" alt="Automatenlösungen">
       </div>
       <div class="feature-text">
         <div class="section-label">Individuell</div>
@@ -189,7 +189,7 @@
         <p class="vorteile-card-text">Maßgeschneiderte Komplettlösungen, die sich individuell an jede Anforderung anpassen.</p>
       </div>
       <div class="vorteile-card fade-in">
-        <div class="vorteile-icon"><img src="assets/images/lösungen.svg" alt="Innovative Lösungen"></div>
+        <div class="vorteile-icon"><img src="assets/images/loesungen.svg" alt="Innovative Lösungen"></div>
         <h4 class="vorteile-card-title">Innovative Lösungen</h4>
         <p class="vorteile-card-text">Moderne Automatentechnik für effiziente und einwandfreie Abläufe.</p>
       </div>
@@ -276,20 +276,33 @@
         <div class="contact-form">
           <div id="formMessage" class="form-message"></div>
           <form id="contactForm" novalidate>
+            <input type="hidden" id="form_ts" name="form_ts">
             <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
             <div class="form-row">
-              <div class="form-group"><label>Unternehmensname *</label><input type="text" name="unternehmensname" required placeholder="Ihr Unternehmen"></div>
+              <div class="form-group">
+                <label for="unternehmensname">Unternehmensname *</label>
+                <input type="text" id="unternehmensname" name="unternehmensname" required placeholder="Ihr Unternehmen">
+                <span class="form-field-error" id="err-unternehmensname"></span>
+              </div>
               <div class="form-group"><label>Adresse</label><input type="text" name="adresse" placeholder="Straße, PLZ, Ort"></div>
             </div>
             <div class="form-row">
-              <div class="form-group"><label>Telefon</label><input type="tel" name="telefon" placeholder="+43 ..."></div>
-              <div class="form-group"><label>E-Mail *</label><input type="email" name="email" required placeholder="ihre@email.at"></div>
+              <div class="form-group">
+                <label for="telefon">Telefon</label>
+                <input type="tel" id="telefon" name="telefon" placeholder="+43 ...">
+                <span class="form-field-error" id="err-telefon"></span>
+              </div>
+              <div class="form-group">
+                <label for="email">E-Mail *</label>
+                <input type="email" id="email" name="email" required placeholder="ihre@email.at">
+                <span class="form-field-error" id="err-email"></span>
+              </div>
             </div>
             <div class="form-row">
               <div class="form-group"><label>Ansprechpartner</label><input type="text" name="ansprechpartner" placeholder="Vor- und Nachname"></div>
               <div class="form-group"><label>Anzahl der Mitarbeiter</label><input type="text" name="mitarbeiter" placeholder="z.B. 50–100"></div>
             </div>
-            <div class="form-group"><label>Ihre Nachricht</label><textarea name="nachricht" placeholder="Beschreiben Sie Ihre Anforderungen..."></textarea></div>
+            <div class="form-group"><label for="nachricht">Ihre Nachricht</label><textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie Ihre Anforderungen..."></textarea></div>
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Anfrage absenden →</button>
           </form>
         </div>

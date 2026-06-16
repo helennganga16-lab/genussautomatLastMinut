@@ -350,17 +350,33 @@ function submitForm() {
 
   const _overview = buildStepperEmailOverview(data);
 
-  // TODO: Hier Daten an Backend senden, z.B.:
-  //   fetch('contact.php', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ ...data, _overview })
-  //   })
-  //   .then(r => r.json())
-  //   .then(json => { if (!json.success) { /* Fehler anzeigen */ } });
-  // Bis dahin wird nach Validierung direkt die Danke-Ansicht angezeigt.
+  const fd = new FormData();
+  fd.append('unternehmensname', data.vorname + ' ' + data.nachname);
+  fd.append('email',            data.email);
+  fd.append('telefon',          data.telefon);
+  fd.append('mitarbeiter',      data.mitarbeiter ?? '');
+  fd.append('nachricht',        _overview);
+  fd.append('form_ts', Math.floor(parseInt(document.getElementById('form_timestamp').value, 10) / 1000).toString());
 
-  showThankyou();
+  const sendBtn = document.querySelector('.btn-send');
+  if (sendBtn) sendBtn.disabled = true;
+
+  fetch('contact.php', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(json => {
+      if (json.success) {
+        showThankyou();
+      } else {
+        err5.style.display = 'block';
+        err5.textContent = json.message || 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.';
+        if (sendBtn) sendBtn.disabled = false;
+      }
+    })
+    .catch(() => {
+      err5.style.display = 'block';
+      err5.textContent = 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.';
+      if (sendBtn) sendBtn.disabled = false;
+    });
 }
 
 function showThankyou() {
@@ -383,3 +399,13 @@ document.getElementById('f_tel').addEventListener('blur', function () {
 document.getElementById('f_email').addEventListener('blur', function () {
   this.classList.toggle('invalid', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim()));
 });
+
+// ── BUTTON EVENT LISTENERS (replaces inline onclick handlers) ──
+document.querySelectorAll('[data-wiz-next]').forEach(btn => {
+  btn.addEventListener('click', () => nextStep(parseInt(btn.dataset.wizNext, 10)));
+});
+document.querySelectorAll('[data-wiz-prev]').forEach(btn => {
+  btn.addEventListener('click', () => prevStep(parseInt(btn.dataset.wizPrev, 10)));
+});
+const wizSubmitBtn = document.querySelector('[data-wiz-submit]');
+if (wizSubmitBtn) wizSubmitBtn.addEventListener('click', submitForm);

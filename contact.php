@@ -8,8 +8,30 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// ─── Rate Limiting ────────────────────────────────────────────────────────────
+$ip            = trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown')[0]);
+$rateLimitDir  = __DIR__ . '/rate_limits';
+$rateLimitFile = $rateLimitDir . '/' . md5($ip) . '.json';
+$maxRequests   = 5;
+$windowSec     = 3600;
+
+if (!is_dir($rateLimitDir)) { @mkdir($rateLimitDir, 0750, true); }
+$now = time();
+$rl  = ['count' => 0, 'reset_at' => $now + $windowSec];
+if (file_exists($rateLimitFile)) {
+    $stored = @json_decode(file_get_contents($rateLimitFile), true);
+    if ($stored && $now < ($stored['reset_at'] ?? 0)) { $rl = $stored; }
+}
+if ($rl['count'] >= $maxRequests) {
+    http_response_code(429);
+    echo json_encode(['success' => false, 'message' => 'Zu viele Anfragen. Bitte später erneut versuchen.']);
+    exit;
+}
+$rl['count']++;
+@file_put_contents($rateLimitFile, json_encode($rl), LOCK_EX);
+
 define('MAIL_TO',        'office@genussautomaten.at');
-define('MAIL_FROM',      'noreply@genussautomaten.at');
+define('MAIL_FROM',      'office@genussautomaten.at');
 define('MAIL_FROM_NAME', 'Genussautomaten Kontaktformular');
 
 require __DIR__ . '/mail_service.php';

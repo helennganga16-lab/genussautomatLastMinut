@@ -176,7 +176,7 @@
 <header class="site-header scrolled" id="siteHeader">
   <div class="header-inner">
     <a href="index.html" class="logo">
-      <img src="assets/images/logo-1.png" alt="Genussautomaten Logo" onerror="this.style.display='none'">
+      <img src="assets/images/logo-1.png" alt="Genussautomaten Logo">
       Genussautomaten
     </a>
     <nav>
@@ -325,7 +325,7 @@
       </div>
       <div class="step-error" id="err-1">Bitte wählen Sie eine Option aus.</div>
       <div class="btn-row">
-        <button class="btn btn-next" onclick="nextStep(1)">Weiter →</button>
+        <button class="btn btn-next" data-wiz-next="1">Weiter →</button>
       </div>
     </div>
 
@@ -356,8 +356,8 @@
       </div>
       <div class="step-error" id="err-2">Bitte wählen Sie mindestens eine Option aus.</div>
       <div class="btn-row">
-        <button class="btn btn-back" onclick="prevStep(2)">Zurück</button>
-        <button class="btn btn-next" onclick="nextStep(2)">Weiter →</button>
+        <button class="btn btn-back" data-wiz-prev="2">Zurück</button>
+        <button class="btn btn-next" data-wiz-next="2">Weiter →</button>
       </div>
     </div>
 
@@ -384,8 +384,8 @@
       </div>
       <div class="step-error" id="err-3">Bitte wählen Sie eine Option aus.</div>
       <div class="btn-row">
-        <button class="btn btn-back" onclick="prevStep(3)">Zurück</button>
-        <button class="btn btn-next" onclick="nextStep(3)">Weiter →</button>
+        <button class="btn btn-back" data-wiz-prev="3">Zurück</button>
+        <button class="btn btn-next" data-wiz-next="3">Weiter →</button>
       </div>
     </div>
 
@@ -408,8 +408,8 @@
       </div>
       <div class="step-error" id="err-4">Bitte wählen Sie eine Option aus.</div>
       <div class="btn-row">
-        <button class="btn btn-back" onclick="prevStep(4)">Zurück</button>
-        <button class="btn btn-next" onclick="nextStep(4)">Weiter →</button>
+        <button class="btn btn-back" data-wiz-prev="4">Zurück</button>
+        <button class="btn btn-next" data-wiz-next="4">Weiter →</button>
       </div>
     </div>
 
@@ -452,10 +452,10 @@
       <div class="step-error" id="err-5" style="margin-top:6px;"></div>
 
       <div class="btn-row" style="margin-top:14px; margin-bottom:0;">
-        <button class="btn btn-back" onclick="prevStep(5)">Zurück</button>
+        <button class="btn btn-back" data-wiz-prev="5">Zurück</button>
       </div>
       <p class="form-privacy">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="datenschutz.html">Datenschutzerklärung</a> zu.</p>
-      <button class="btn-send" onclick="submitForm()">Anfrage absenden</button>
+      <button class="btn-send" data-wiz-submit>Anfrage absenden</button>
     </div>
 
   </div>
